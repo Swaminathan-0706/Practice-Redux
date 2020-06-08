@@ -1,9 +1,12 @@
 const redux=require('redux');
 const createStore=redux.createStore
+const combineReducers=redux.combineReducers
 
 //Actions
 
 const Buy_cake='BUY_CAKE'
+const Buy_Ice='BUY_ICE'
+
 
 function buycake()
 {
@@ -12,15 +15,43 @@ function buycake()
         info: 'FirstRedux_Action'
     }
 }
+function buyIce(){
+    return{
+        type:Buy_Ice,
+        info:'SecondRedux_Action'
+    }
+}
 
 //Reducers
 //(previousState,action)=>newwState
 
-const initialState={
+// const initialState={
+//     numOfCakes:10,
+//     numofIceCreams:20
+// }
+const initialcakeState={
     numOfCakes:10
 }
-
-const reducer=(state=initialState,action)=>{
+const initiaIceCream={
+    numofIceCreams:20
+}
+// const reducer=(state=initialState,action)=>{
+//     switch(action.type){
+//         case Buy_cake:return{
+//             ...state,
+//             numOfCakes:state.numOfCakes-1
+//         }
+//         default:return state
+//     }
+//     switch(action.type){
+//         case Buy_Ice:return{
+//             ...state,
+//             numofIceCreams:state.numofIceCreams-1
+//         }
+//         default:return state
+//     }
+// }
+const cakereducer=(state=initialcakeState,action)=>{
     switch(action.type){
         case Buy_cake:return{
             ...state,
@@ -29,13 +60,29 @@ const reducer=(state=initialState,action)=>{
         default:return state
     }
 }
-
+const iceCreamReducer=(state=initiaIceCream,action)=>{
+    switch(action.type){
+        case Buy_Ice:return{
+            ...state,
+            numofIceCreams:state.numofIceCreams-1
+        }
+        default:return state
+    }
+}
+//Combine reducers
+const rootReducer=combineReducers({
+    cake:cakereducer,
+    ice:iceCreamReducer
+})
 //
-const store=createStore(reducer)
+const store=createStore(rootReducer)
 
 console.log(store.getState());
 const unsubscribe=store.subscribe(()=>console.log('Updated State',store.getState()))
 store.dispatch(buycake())
 store.dispatch(buycake())
 store.dispatch(buycake())
+store.dispatch(buyIce())
+store.dispatch(buyIce())
+
 unsubscribe()
